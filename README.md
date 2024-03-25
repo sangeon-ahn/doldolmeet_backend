@@ -34,24 +34,24 @@
 
 ## 3. 아키텍처
 
-![아키텍처](public/docs/아키텍처.png)
+![아키텍처](./public/docs/아키텍처.png)
 
 ## 4. 기술적 챌린지
 ### 1) 대기열 구현
-![대기열구현](public/docs/대기열구현.png)
+![대기열구현](./public/docs/대기열구현.png)
 
 * 문제: 여러번 API를 호출함에 따라 코드 복잡도가 증가
 * 해결: 웹훅과 SSE 기반 구현으로 변경하며 기존의 API 요청 정보는 Openvidu에서 발생하는 Event를 웹훅으로 받아 대체할 수 있었고,
 * 클라이언트에게 알림이 필요할 때는 SSE를 통해 데이터를 유저에게 전송하도록 했습니다.
 
 ### 2) Server Sent Events의 유실 문제 해결
-![SSE유실](public/docs/SSE유실.png)
+![SSE유실](./public/docs/SSE유실.png)
 
 * 문제: 간헐적 SSE 유실 문제 발생하면서 팬이 다음 아이돌방으로 넘어가지 못함
 * 해결: HTTP/2 활성화, connection timeout 설정, sticky session 활성화, SSE에 시간 기반 id 부여하여 유실된 이벤트 추적하여 재전송
 
 ### 3) 네트워크 이슈로 인한 비정상 종료시 남은 시간 보존
-![남은시간보존](public/docs/남은시간보존.png)
+![남은시간보존](./public/docs/남은시간보존.png)
 
 * 문제: 네트워크 끊김 유무 체크를 polling 방식으로 수행함에 따라 비효율적
 * 해결: 네트워크 이슈 감지 쓰레드를 만들어 끊김 감지시 처리하도록 하여 비효율성 제거
