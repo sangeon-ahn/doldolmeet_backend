@@ -6,7 +6,32 @@
 * 팀원: 6명 (팀장 안상언, 마재화, 박종호, 장호영, 조가람, 홍영의)
 * 기간: 2023.11.08 - 2023.12.16 (5주)
 
-## 1. 기획의도
+## 1. 기술적 챌린지
+### 1) 대기열 구현
+
+![대기열구현](https://github.com/sangeon-ahn/doldolmeet_backend/blob/main/public/docs/%E1%84%83%E1%85%A2%E1%84%80%E1%85%B5%E1%84%8B%E1%85%A7%E1%86%AF%E1%84%80%E1%85%AE%E1%84%92%E1%85%A7%E1%86%AB.png)
+
+* 문제: 여러번 API를 호출함에 따라 코드 복잡도가 증가
+* 해결: 웹훅과 SSE 기반 구현으로 변경하며 기존의 API 요청 정보는 Openvidu에서 발생하는 Event를 웹훅으로 받아 대체할 수 있었고, 클라이언트에게 알림이 필요할 때는 SSE를 통해 데이터를 유저에게 전송
+
+### 2) Server Sent Events의 유실 문제 해결
+![SSE유실](https://github.com/sangeon-ahn/doldolmeet_backend/blob/main/public/docs/SSE%E1%84%8B%E1%85%B2%E1%84%89%E1%85%B5%E1%86%AF.png)
+
+* 문제: 간헐적 SSE 유실 문제 발생하면서 팬이 다음 아이돌방으로 넘어가지 못함
+* 해결: HTTP/2 활성화, connection timeout 설정, sticky session 활성화, SSE에 시간 기반 id 부여하여 유실된 이벤트 추적하여 재전송
+
+### 3) 네트워크 이슈로 인한 비정상 종료시 남은 시간 보존
+![남은시간보존](https://github.com/sangeon-ahn/doldolmeet_backend/blob/main/public/docs/%E1%84%82%E1%85%A1%E1%86%B7%E1%84%8B%E1%85%B3%E1%86%AB%E1%84%89%E1%85%B5%E1%84%80%E1%85%A1%E1%86%AB%E1%84%87%E1%85%A9%E1%84%8C%E1%85%A9%E1%86%AB.png)
+
+* 문제: 네트워크 끊김 유무 체크를 polling 방식으로 수행함에 따라 비효율적
+* 해결: 네트워크 이슈 감지 쓰레드를 만들어 끊김 감지시 처리하도록 하여 비효율성 제거
+
+
+## 2. 아키텍처
+
+![아키텍처](./public/docs/아키텍처.png)
+  
+## 3. 기획의도
 
 ### 😢 일일이 영상통화를 걸고 끊고... 영통 팬싸 진행의 번거로움
 * 소속사가 비대면 팬미팅, 소위 영통 팬싸를 진행함에 있어 여러 불편 요소가 존재함
@@ -24,7 +49,7 @@
 
 ![팬미팅_현장](public/docs/팬미팅_현장.png)
 
-## 2. 발표 및 시연 영상
+## 4. 발표 및 시연 영상
 
 ### 2-1. 발표 영상 (PPT 발표 포함)
 [![](./public/docs/돌돌밋_발표영상_유튜브_썸네일.png)](https://youtu.be/A6VFVRwBNBY)
@@ -32,32 +57,11 @@
 ### 2-2. 시연 영상 (PPT 발표 제외)
 [![](./public/docs/돌돌밋_시연영상_유튜브_썸네일.png)](https://youtu.be/6jjJcgHJBaM)
 
-## 3. 아키텍처
 
-![아키텍처](./public/docs/아키텍처.png)
 
-## 4. 기술적 챌린지
-### 1) 대기열 구현
 
-![대기열구현](https://github.com/sangeon-ahn/doldolmeet_backend/blob/main/public/docs/%E1%84%83%E1%85%A2%E1%84%80%E1%85%B5%E1%84%8B%E1%85%A7%E1%86%AF%E1%84%80%E1%85%AE%E1%84%92%E1%85%A7%E1%86%AB.png)
 
-* 문제: 여러번 API를 호출함에 따라 코드 복잡도가 증가
-* 해결: 웹훅과 SSE 기반 구현으로 변경하며 기존의 API 요청 정보는 Openvidu에서 발생하는 Event를 웹훅으로 받아 대체할 수 있었고,
-* 클라이언트에게 알림이 필요할 때는 SSE를 통해 데이터를 유저에게 전송하도록 했습니다.
-
-### 2) Server Sent Events의 유실 문제 해결
-![SSE유실](https://github.com/sangeon-ahn/doldolmeet_backend/blob/main/public/docs/SSE%E1%84%8B%E1%85%B2%E1%84%89%E1%85%B5%E1%86%AF.png)
-
-* 문제: 간헐적 SSE 유실 문제 발생하면서 팬이 다음 아이돌방으로 넘어가지 못함
-* 해결: HTTP/2 활성화, connection timeout 설정, sticky session 활성화, SSE에 시간 기반 id 부여하여 유실된 이벤트 추적하여 재전송
-
-### 3) 네트워크 이슈로 인한 비정상 종료시 남은 시간 보존
-![남은시간보존](https://github.com/sangeon-ahn/doldolmeet_backend/blob/main/public/docs/%E1%84%82%E1%85%A1%E1%86%B7%E1%84%8B%E1%85%B3%E1%86%AB%E1%84%89%E1%85%B5%E1%84%80%E1%85%A1%E1%86%AB%E1%84%87%E1%85%A9%E1%84%8C%E1%85%A9%E1%86%AB.png)
-
-* 문제: 네트워크 끊김 유무 체크를 polling 방식으로 수행함에 따라 비효율적
-* 해결: 네트워크 이슈 감지 쓰레드를 만들어 끊김 감지시 처리하도록 하여 비효율성 제거
-* 
-## 4. 주요 기능
+## 5. 주요 기능
 
 ### 1) 메인 대기실
 
