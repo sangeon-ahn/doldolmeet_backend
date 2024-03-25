@@ -38,7 +38,8 @@
 
 ## 4. 기술적 챌린지
 ### 1) 대기열 구현
-![대기열구현](./public/docs/대기열구현.png)
+
+![대기열구현](https://github.com/sangeon-ahn/doldolmeet_backend/blob/main/public/docs/%EB%8C%80%EA%B8%B0%EC%97%B4%EA%B5%AC%ED%98%84.png)
 
 * 문제: 여러번 API를 호출함에 따라 코드 복잡도가 증가
 * 해결: 웹훅과 SSE 기반 구현으로 변경하며 기존의 API 요청 정보는 Openvidu에서 발생하는 Event를 웹훅으로 받아 대체할 수 있었고,
